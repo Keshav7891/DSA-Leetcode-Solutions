@@ -1,8 +1,33 @@
 class Solution {
   public:
 
+    bool helpDfs(int curr, int prnt, unordered_map<int, vector<int>>& adj, unordered_map<int,bool>&visited){
+      visited[curr] = true;
+
+      bool hasCycle = false;
+
+      for(auto nbr : adj[curr]){
+        if(visited[nbr] == false){
+          hasCycle = hasCycle || helpDfs(nbr, curr, adj, visited);
+        }else if(nbr != prnt){
+          return true;
+        }
+      }
+
+      return hasCycle;
+    }
+
     bool dfsHelper(unordered_map<int, vector<int>>&adj){
-        return true;
+        unordered_map<int, bool>visited;
+        for(auto key : adj){
+          if(visited[key.first] == false){
+            bool res = helpDfs(key.first, -1, adj, visited);
+            if(res == true){
+              return true;
+            }
+          }
+        }
+        return false;
     }
 
     bool helpBfs(int curr, unordered_map<int, vector<int>>&adj, unordered_map<int, bool>& visited){
